@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Confession Ẩn Danh</title>
+
+<!-- Google Fonts: serif cho tiêu đề (cảm giác như viết tay/nhật ký), sans cho nội dung -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    /* ---- Design tokens ---- */
+    --bg-deep: #16131f;
+    --bg-deep-2: #1f1a2c;
+    --surface: #241f33;
+    --surface-2: #2c2640;
+    --line: rgba(255,255,255,0.08);
+    --text-main: #ece8f5;
+    --text-muted: #a79fc0;
+    --text-faint: #786f93;
+    --accent: #e8a8c0;      /* hồng phấn - dịu, riêng tư, giống ánh nến */
+    --accent-2: #c9a6f0;    /* tím nhạt - phối cùng accent */
+    --accent-strong: #dd8bab;
+    --danger: #f2879a;
+    --success: #9fd8b0;
+    --radius-lg: 22px;
+    --radius-md: 14px;
+    --radius-sm: 10px;
+    --shadow-soft: 0 20px 60px -20px rgba(0,0,0,0.55);
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin:0; padding:0;
+    height:100%;
+    background:
+      radial-gradient(circle at 20% 0%, #2a2140 0%, transparent 55%),
+      radial-gradient(circle at 85% 15%, #241a34 0%, transparent 45%),
+      linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-deep-2) 100%);
+    color: var(--text-main);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Signature element: mảnh "ánh sáng nến" mềm phía sau card, gợi cảm giác
+     một góc riêng tư giữa đêm để viết ra điều thầm kín. */
+  body::before{
+    content:"";
+    position: fixed;
+    top: 12%;
+    left: 50%;
+    width: 480px;
+    height: 480px;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(232,168,192,0.16) 0%, rgba(232,168,192,0) 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .app{
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .screen{
+    width: 100%;
+    max-width: 480px;
+    display: none;
+  }
+  .screen.active{ display: block; }
+
+  /* --- fade/slide transition nhẹ giữa các màn hình --- */
+  @keyframes fadeSlideIn{
+    from{ opacity: 0; transform: translateY(14px); }
+    to{ opacity: 1; transform: translateY(0); }
+  }
+  .screen.active{ animation: fadeSlideIn 0.45s ease; }
+
+  .card{
+    background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 40px 32px;
+    box-shadow: var(--shadow-soft);
+  }
+
+  /* ---------- Welcome screen ---------- */
+  .welcome-card{ text-align: center; }
+
+  .eyebrow{
+    display:inline-block;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+    font-weight: 600;
+  }
+
+  h1.title{
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 1.25;
+    margin: 0 0 14px;
+    color: var(--text-main);
+  }
+
+  p.subtitle{
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin: 0 0 32px;
+  }
+
+  .btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 8px;
+    width: 100%;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 17px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+  }
+  .btn:active{ transform: scale(0.98); }
+
+  .btn-primary{
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+    color: #241428;
+    box-shadow: 0 10px 30px -8px rgba(232,168,192,0.45);
+  }
+  .btn-primary:hover{ box-shadow: 0 12px 34px -6px rgba(232,168,192,0.6); }
+  .btn-primary:disabled{
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .btn-ghost{
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--line);
+  }
+  .btn-ghost:hover{ color: var(--text-main); border-color: var(--accent); }
+
+  /* ---------- Confession form screen ---------- */
+  .form-header{ text-align:center; margin-bottom: 26px; }
+  .form-header h2{
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 500;
+    margin: 0 0 8px;
+  }
+  .form-header .hint{
+    font-size: 13px;
+    color: var(--text-faint);
+    margin: 0;
+  }
+
+  textarea#confessionText{
+    width: 100%;
+    min-height: 180px;
+    max-height: 420px;
+    resize: vertical;
+    background: rgba(0,0,0,0.18);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 16px;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  textarea#confessionText::placeholder{ color: var(--text-faint); }
+  textarea#confessionText:focus{ border-color: var(--accent); }
+  textarea#confessionText.input-error{ border-color: var(--danger); }
+
+  .char-counter{
+    text-align: right;
+    font-size: 12px;
+    color: var(--text-faint);
+    margin-top: 6px;
+  }
+  .char-counter.limit-near{ color: var(--danger); }
+
+  /* --- Image attach --- */
+  .attach-block{ margin-top: 20px; }
+
+  .attach-btn{
+    width: 100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 8px;
+    background: rgba(255,255,255,0.04);
+    border: 1px dashed var(--line);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .attach-btn:hover{ border-color: var(--accent); color: var(--text-main); }
+
+  #imageInput{ display:none; }
+
+  .image-preview-wrap{
+    display:none;
+    margin-top: 12px;
+    align-items:center;
+    gap: 12px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 10px;
+  }
+  .image-preview-wrap.active{ display:flex; }
+
+  .image-preview-wrap img{
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+  }
+
+  .image-preview-info{
+    flex: 1;
+    min-width: 0;
+  }
+  .image-preview-info .fname{
+    font-size: 13px;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .image-preview-info .fsize{
+    font-size: 11px;
+    color: var(--text-faint);
+  }
+
+  .remove-image-btn{
+    background: none;
+    border: none;
+    color: var(--danger);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: 6px 8px;
+  }
+
+  /* --- Feedback messages --- */
+  .field-error{
+    display:none;
+    font-size: 13px;
+    color: var(--danger);
+    margin-top: 8px;
+  }
+  .field-error.active{ display:block; }
+
+  .status-line{
+    display:none;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align:center;
+    margin-top: 12px;
+  }
+  .status-line.active{ display:block; }
+
+  .privacy-note{
+    font-size: 12px;
+    color: var(--text-faint);
+    text-align:center;
+    margin-top: 22px;
+    line-height: 1.5;
+  }
+
+  .submit-block{ margin-top: 22px; }
+
+  /* spinner nhỏ trong nút khi đang gửi */
+  .spinner{
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(36,20,40,0.35);
+    border-top-color: #241428;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display:none;
+  }
+  .btn-primary.loading .spinner{ display:inline-block; }
+  .btn-primary.loading .btn-label{ opacity: 0.85; }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+
+  /* ---------- Success screen ---------- */
+  .success-card{ text-align:center; }
+  .success-icon{ font-size: 44px; margin-bottom: 14px; }
+  .success-card h2{
+    font-family:'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 500;
+    margin: 0 0 12px;
+  }
+  .success-card p{
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin: 0 0 30px;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 480px){
+    .card{ padding: 30px 22px; border-radius: 18px; }
+    h1.title{ font-size: 26px; }
+    .form-header h2{ font-size: 22px; }
+  }
+
+  @media (min-width: 900px){
+    .card{ padding: 48px 44px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============ Welcome Screen ============ -->
+  <section id="welcomeScreen" class="screen active">
+    <div class="card welcome-card">
+      <span class="eyebrow">Không gian riêng tư</span>
+      <h1 class="title">Chào mừng bạn đến với Confession</h1>
+      <p class="subtitle">
+        Hãy chia sẻ câu chuyện, suy nghĩ hoặc lời muốn nói của bạn một cách hoàn toàn ẩn danh.
+      </p>
+      <button class="btn btn-primary" id="goToFormBtn">Gửi Confession</button>
+    </div>
+  </section>
+
+  <!-- ============ Confession Form Screen ============ -->
+  <section id="formScreen" class="screen">
+    <div class="card">
+      <div class="form-header">
+        <h2>Viết Confession</h2>
+        <p class="hint">Confession của bạn sẽ được gửi dưới dạng ẩn danh.</p>
+      </div>
+
+      <textarea
+        id="confessionText"
+        placeholder="Viết điều bạn muốn chia sẻ..."
+        maxlength="2000"
+      ></textarea>
+      <div class="char-counter" id="charCounter">0 / 2000</div>
+      <div class="field-error" id="textError"></div>
+
+      <!-- Đính kèm hình ảnh -->
+      <div class="attach-block">
+        <button type="button" class="attach-btn" id="attachBtn">📷 Thêm hình ảnh</button>
+        <input type="file" id="imageInput" accept=".jpg,.jpeg,.png,.webp,.gif,image/jpeg,image/png,image/webp,image/gif">
+
+        <div class="image-preview-wrap" id="imagePreviewWrap">
+          <img id="imagePreviewThumb" src="" alt="Ảnh đính kèm">
+          <div class="image-preview-info">
+            <div class="fname" id="imageFileName"></div>
+            <div class="fsize" id="imageFileSize"></div>
+          </div>
+          <button type="button" class="remove-image-btn" id="removeImageBtn">Xóa ảnh</button>
+        </div>
+
+        <div class="field-error" id="imageError"></div>
+      </div>
+
+      <!-- Nút gửi -->
+      <div class="submit-block">
+        <button class="btn btn-primary" id="submitBtn">
+          <span class="spinner"></span>
+          <span class="btn-label">Gửi Confession</span>
+        </button>
+        <div class="status-line" id="statusLine"></div>
+      </div>
+
+      <p class="privacy-note">
+        🔒 Không cần cung cấp thông tin cá nhân. Confession được gửi dưới dạng ẩn danh.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ Success Screen ============ -->
+  <section id="successScreen" class="screen">
+    <div class="card success-card">
+      <div class="success-icon">🎉</div>
+      <h2>Gửi Confession thành công!</h2>
+      <p>Cảm ơn bạn đã chia sẻ. Confession của bạn đã được gửi ẩn danh.</p>
+      <button class="btn btn-primary" id="sendAnotherBtn">Gửi Confession khác</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ==========================================================
+   CONFESSION APP - JS
+   Hiện tại chưa có backend. Toàn bộ việc "gửi" chỉ là mô phỏng.
+   ========================================================== */
+
+// ----- Constants -----
+const MAX_CHARS = 2000;
+const MAX_IMAGE_MB = 5;
+const MAX_IMAGE_BYTES = MAX_IMAGE_MB * 1024 * 1024;
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
+// ----- Screen elements -----
+const welcomeScreen = document.getElementById('welcomeScreen');
+const formScreen = document.getElementById('formScreen');
+const successScreen = document.getElementById('successScreen');
+
+// ----- Form elements -----
+const goToFormBtn = document.getElementById('goToFormBtn');
+const confessionText = document.getElementById('confessionText');
+const charCounter = document.getElementById('charCounter');
+const textError = document.getElementById('textError');
+
+const attachBtn = document.getElementById('attachBtn');
+const imageInput = document.getElementById('imageInput');
+const imagePreviewWrap = document.getElementById('imagePreviewWrap');
+const imagePreviewThumb = document.getElementById('imagePreviewThumb');
+const imageFileName = document.getElementById('imageFileName');
+const imageFileSize = document.getElementById('imageFileSize');
+const removeImageBtn = document.getElementById('removeImageBtn');
+const imageError = document.getElementById('imageError');
+
+const submitBtn = document.getElementById('submitBtn');
+const statusLine = document.getElementById('statusLine');
+const sendAnotherBtn = document.getElementById('sendAnotherBtn');
+
+// Lưu file ảnh hiện tại đang được chọn (chưa lưu vào localStorage, chỉ giữ trong bộ nhớ)
+let currentImageFile = null;
+
+// ----- Helper: chuyển màn hình -----
+function showScreen(screenEl){
+  [welcomeScreen, formScreen, successScreen].forEach(s => s.classList.remove('active'));
+  screenEl.classList.add('active');
+}
+
+goToFormBtn.addEventListener('click', () => showScreen(formScreen));
+
+// ----- Đếm ký tự -----
+confessionText.addEventListener('input', () => {
+  const len = confessionText.value.length;
+  charCounter.textContent = `${len} / ${MAX_CHARS}`;
+  charCounter.classList.toggle('limit-near', len > MAX_CHARS * 0.9);
+  clearFieldError(textError, confessionText);
+});
+
+// ----- Đính kèm hình ảnh -----
+attachBtn.addEventListener('click', () => imageInput.click());
+
+imageInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  clearFieldError(imageError);
+
+  // Kiểm tra định dạng
+  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+    showFieldError(imageError, 'Chỉ chấp nhận file ảnh định dạng JPG, PNG, WEBP hoặc GIF.');
+    imageInput.value = '';
+    return;
+  }
+
+  // Kiểm tra dung lượng
+  if (file.size > MAX_IMAGE_BYTES) {
+    showFieldError(imageError, `Ảnh vượt quá dung lượng cho phép (tối đa ${MAX_IMAGE_MB}MB).`);
+    imageInput.value = '';
+    return;
+  }
+
+  currentImageFile = file;
+  renderImagePreview(file);
+});
+
+function renderImagePreview(file){
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    imagePreviewThumb.src = e.target.result;
+    imageFileName.textContent = truncateFileName(file.name);
+    imageFileSize.textContent = formatFileSize(file.size);
+    imagePreviewWrap.classList.add('active');
+  };
+  reader.readAsDataURL(file);
+}
+
+function truncateFileName(name, maxLen = 26){
+  if (name.length <= maxLen) return name;
+  const extIndex = name.lastIndexOf('.');
+  const ext = extIndex !== -1 ? name.slice(extIndex) : '';
+  const base = extIndex !== -1 ? name.slice(0, extIndex) : name;
+  return base.slice(0, maxLen - ext.length - 1) + '…' + ext;
+}
+
+function formatFileSize(bytes){
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+}
+
+removeImageBtn.addEventListener('click', () => {
+  currentImageFile = null;
+  imageInput.value = '';
+  imagePreviewWrap.classList.remove('active');
+  imagePreviewThumb.src = '';
+});
+
+// ----- Field error helpers -----
+function showFieldError(el, message, inputEl){
+  el.textContent = message;
+  el.classList.add('active');
+  if (inputEl) inputEl.classList.add('input-error');
+}
+function clearFieldError(el, inputEl){
+  el.textContent = '';
+  el.classList.remove('active');
+  if (inputEl) inputEl.classList.remove('input-error');
+}
+
+// ----- Validate + Submit -----
+submitBtn.addEventListener('click', async () => {
+  clearFieldError(textError, confessionText);
+  clearFieldError(imageError);
+  statusLine.classList.remove('active');
+
+  const content = confessionText.value;
+  const trimmed = content.trim();
+
+  // Validate nội dung trống hoặc chỉ có khoảng trắng
+  if (trimmed.length === 0) {
+    showFieldError(textError, 'Bạn chưa viết nội dung confession.', confessionText);
+    return;
+  }
+
+  // Validate vượt quá giới hạn ký tự
+  if (content.length > MAX_CHARS) {
+    showFieldError(textError, `Nội dung vượt quá giới hạn ${MAX_CHARS} ký tự.`, confessionText);
+    return;
+  }
+
+  // Validate lại ảnh (phòng trường hợp file bị đổi sau khi chọn)
+  if (currentImageFile && currentImageFile.size > MAX_IMAGE_BYTES) {
+    showFieldError(imageError, `Ảnh vượt quá dung lượng cho phép (tối đa ${MAX_IMAGE_MB}MB).`);
+    return;
+  }
+
+  // ----- Bắt đầu gửi -----
+  setSubmitting(true);
+
+  try {
+    await submitConfession(trimmed, currentImageFile);
+    // Gửi thành công -> chuyển màn hình và reset dữ liệu
+    showScreen(successScreen);
+    resetForm();
+  } catch (err) {
+    // Nếu có lỗi -> hiển thị thông báo, giữ nguyên nội dung để không mất bài
+    statusLine.textContent = 'Có lỗi xảy ra, vui lòng thử lại.';
+    statusLine.classList.add('active');
+  } finally {
+    setSubmitting(false);
+  }
+});
+
+function setSubmitting(isSubmitting){
+  submitBtn.disabled = isSubmitting;
+  submitBtn.classList.toggle('loading', isSubmitting);
+  submitBtn.querySelector('.btn-label').textContent = isSubmitting ? 'Đang gửi...' : 'Gửi Confession';
+}
+
+/**
+ * Hàm gửi confession.
+ * ------------------------------------------------------------------
+ * TODO (phiên bản sau): Kết nối Google Sheets / backend thật tại đây.
+ * Gợi ý tích hợp:
+ *   - Tạo một Google Apps Script (Web App) nhận POST request,
+ *     ghi { content, imageBase64 hoặc imageUrl, timestamp } vào Google Sheet.
+ *   - Hoặc dựng một API backend riêng (Node/Express, Firebase Functions...)
+ *     rồi gọi fetch(API_URL, { method: 'POST', body: ... }) ở đây.
+ *   - Nếu có ảnh, có thể upload ảnh lên storage (Google Drive, Firebase Storage...)
+ *     trước, sau đó chỉ lưu link ảnh vào Sheet/DB.
+ * Hiện tại: chỉ mô phỏng độ trễ mạng và luôn trả về thành công.
+ * ------------------------------------------------------------------
+ */
+async function submitConfession(content, imageFile) {
+  // ===== VỊ TRÍ KẾT NỐI GOOGLE SHEETS / BACKEND SẼ ĐẶT Ở ĐÂY =====
+  // Ví dụ (sẽ dùng ở phiên bản sau):
+  // const response = await fetch('YOUR_GOOGLE_SHEETS_WEBAPP_URL', {
+  //   method: 'POST',
+  //   body: buildFormData(content, imageFile)
+  // });
+  // if (!response.ok) throw new Error('Gửi thất bại');
+
+  // Giả lập độ trễ gửi dữ liệu
+  await new Promise((resolve) => setTimeout(resolve, 1200));
+
+  // Giả lập luôn thành công ở phiên bản hiện tại
+  return { success: true };
+}
+
+// ----- Reset form sau khi gửi thành công -----
+function resetForm(){
+  confessionText.value = '';
+  charCounter.textContent = `0 / ${MAX_CHARS}`;
+  charCounter.classList.remove('limit-near');
+  clearFieldError(textError, confessionText);
+  clearFieldError(imageError);
+  statusLine.classList.remove('active');
+  statusLine.textContent = '';
+
+  currentImageFile = null;
+  imageInput.value = '';
+  imagePreviewWrap.classList.remove('active');
+  imagePreviewThumb.src = '';
+}
+
+// ----- Gửi confession khác -----
+sendAnotherBtn.addEventListener('click', () => {
+  showScreen(formScreen);
+});
+</script>
+
+</body>
+</html>
