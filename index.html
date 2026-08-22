@@ -46,7 +46,8 @@
   }
 
   /* Signature element: mảnh "ánh sáng nến" mềm phía sau card, gợi cảm giác
-     một góc riêng tư giữa đêm để viết ra điều thầm kín. */
+     một góc riêng tư giữa đêm để viết ra điều thầm kín. Giờ thở nhẹ theo nhịp
+     để cả nền có cảm giác sống động, lung linh hơn. */
   body::before{
     content:"";
     position: fixed;
@@ -58,6 +59,73 @@
     background: radial-gradient(circle, rgba(232,168,192,0.16) 0%, rgba(232,168,192,0) 70%);
     pointer-events: none;
     z-index: 0;
+    animation: candleBreath 7s ease-in-out infinite;
+  }
+  @keyframes candleBreath{
+    0%, 100%{ opacity: 0.7; transform: translateX(-50%) scale(1); }
+    50%{ opacity: 1; transform: translateX(-50%) scale(1.08); }
+  }
+
+  /* --- Aurora: hai quầng sáng mờ trôi rất chậm phía sau, tạo chiều sâu mộng mơ --- */
+  .aurora{
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .aurora span{
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    filter: blur(85px);
+    opacity: 0.32;
+  }
+  .aurora span.blob-1{
+    background: var(--accent-2);
+    top: -60px;
+    left: -70px;
+    animation: auroraDrift1 20s ease-in-out infinite;
+  }
+  .aurora span.blob-2{
+    background: var(--accent);
+    bottom: -90px;
+    right: -70px;
+    animation: auroraDrift2 24s ease-in-out infinite;
+  }
+  @keyframes auroraDrift1{
+    0%, 100%{ transform: translate(0, 0); }
+    50%{ transform: translate(50px, 60px); }
+  }
+  @keyframes auroraDrift2{
+    0%, 100%{ transform: translate(0, 0); }
+    50%{ transform: translate(-45px, -55px); }
+  }
+
+  /* --- Particle field: các đốm sáng nhỏ lung linh như đom đóm/ánh sao --- */
+  .particles{
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .particle{
+    position: absolute;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 6px 1px rgba(255,255,255,0.75);
+    animation: twinkle var(--dur, 4s) ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+  }
+  @keyframes twinkle{
+    0%, 100%{ opacity: 0.12; transform: scale(0.7) translateY(0); }
+    50%{ opacity: 0.85; transform: scale(1.2) translateY(-6px); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    body::before, .aurora span, .particle{ animation: none !important; }
   }
 
   .app{
@@ -92,17 +160,50 @@
     box-shadow: var(--shadow-soft);
   }
 
+  /* --- Hiệu ứng ánh sáng đi theo con trỏ chuột trên khung "Viết Confession" --- */
+  .card-glow-host{
+    position: relative;
+    overflow: hidden;
+  }
+  .cursor-glow{
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(280px circle at var(--x, 50%) var(--y, 50%), rgba(232,168,192,0.18), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 0;
+  }
+  .cursor-glow.active{ opacity: 1; }
+  .card-content{
+    position: relative;
+    z-index: 1;
+  }
+  @media (prefers-reduced-motion: reduce){
+    .cursor-glow{ display: none; }
+  }
+
   /* ---------- Welcome screen ---------- */
   .welcome-card{ text-align: center; }
 
   .eyebrow{
-    display:inline-block;
+    display:inline-flex;
+    align-items:center;
+    gap: 8px;
     font-size: 12px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--accent);
     margin-bottom: 18px;
     font-weight: 600;
+  }
+  .eyebrow .sparkle{
+    display:inline-block;
+    animation: sparkleSpin 3.5s ease-in-out infinite;
+  }
+  @keyframes sparkleSpin{
+    0%, 100%{ transform: scale(1) rotate(0deg); opacity: 0.85; }
+    50%{ transform: scale(1.25) rotate(15deg); opacity: 1; }
   }
 
   h1.title{
@@ -112,6 +213,7 @@
     line-height: 1.25;
     margin: 0 0 14px;
     color: var(--text-main);
+    text-shadow: 0 0 26px rgba(232,168,192,0.25);
   }
 
   p.subtitle{
@@ -139,6 +241,8 @@
   .btn:active{ transform: scale(0.98); }
 
   .btn-primary{
+    position: relative;
+    overflow: hidden;
     background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
     color: #241428;
     box-shadow: 0 10px 30px -8px rgba(232,168,192,0.45);
@@ -149,6 +253,19 @@
     cursor: not-allowed;
     box-shadow: none;
   }
+  /* Dải sáng lướt qua nhẹ nhàng khi hover, tạo cảm giác lấp lánh */
+  .btn-primary::after{
+    content:"";
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.55), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.7s ease;
+  }
+  .btn-primary:hover::after{ left: 130%; }
 
   .btn-ghost{
     background: transparent;
@@ -164,6 +281,26 @@
     font-size: 26px;
     font-weight: 500;
     margin: 0 0 8px;
+    /* Gradient chạy liên tục qua chữ, tạo cảm giác lung linh */
+    background: linear-gradient(90deg,
+      var(--accent) 0%,
+      var(--accent-2) 25%,
+      var(--text-main) 50%,
+      var(--accent-2) 75%,
+      var(--accent) 100%);
+    background-size: 250% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: gradientFlow 6s linear infinite;
+  }
+  @keyframes gradientFlow{
+    0%{ background-position: 0% 50%; }
+    100%{ background-position: 250% 50%; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .form-header h2{ animation: none; background-position: 0% 50%; }
   }
   .form-header .hint{
     font-size: 13px;
@@ -313,7 +450,17 @@
 
   /* ---------- Success screen ---------- */
   .success-card{ text-align:center; }
-  .success-icon{ font-size: 44px; margin-bottom: 14px; }
+  .success-icon{
+    font-size: 44px;
+    margin-bottom: 14px;
+    display: inline-block;
+    animation: successPop 0.6s ease;
+  }
+  @keyframes successPop{
+    0%{ transform: scale(0.4) rotate(-10deg); opacity: 0; }
+    60%{ transform: scale(1.15) rotate(6deg); opacity: 1; }
+    100%{ transform: scale(1) rotate(0deg); }
+  }
   .success-card h2{
     font-family:'Fraunces', serif;
     font-size: 24px;
@@ -341,15 +488,24 @@
 </head>
 <body>
 
+<!-- Lớp ánh sáng aurora trôi chậm phía sau, tạo chiều sâu mộng mơ -->
+<div class="aurora">
+  <span class="blob-1"></span>
+  <span class="blob-2"></span>
+</div>
+
+<!-- Các đốm sáng lung linh, được sinh ngẫu nhiên bằng JS bên dưới -->
+<div class="particles" id="particles"></div>
+
 <div class="app">
 
   <!-- ============ Welcome Screen ============ -->
   <section id="welcomeScreen" class="screen active">
     <div class="card welcome-card">
-      <span class="eyebrow">Ngôn ngữ luôn có đích đến của nó, chúng tôi tin tâm sự của bạn cũng vậy.</span>
+      <span class="eyebrow"><span class="sparkle">✨</span> YENSOCONFESSION <span class="sparkle">✨</span></span>
       <h1 class="title">Chào mừng bạn đến với Yên Sở Confession</h1>
       <p class="subtitle">
-        Hãy chia sẻ câu chuyện, suy nghĩ hoặc lời muốn nói của bạn một cách hoàn toàn ẩn danh.
+        Hãy chia sẻ câu chuyện, suy nghĩ hoặc lời muốn nói của bạn ngay nào!!
       </p>
       <button class="btn btn-primary" id="goToFormBtn">Gửi Confession</button>
     </div>
@@ -357,15 +513,19 @@
 
   <!-- ============ Confession Form Screen ============ -->
   <section id="formScreen" class="screen">
-    <div class="card">
+    <div class="card card-glow-host" id="formCard">
+      <!-- Lớp ánh sáng đi theo con trỏ chuột, chỉ hiển thị khi hover -->
+      <div class="cursor-glow"></div>
+
+      <div class="card-content">
       <div class="form-header">
-        <h2>Viết Confession</h2>
+        <h2>Viết "tâm tư" của bạn ở đây</h2>
         <p class="hint">Confession của bạn sẽ được gửi dưới dạng ẩn danh.</p>
       </div>
 
       <textarea
         id="confessionText"
-        placeholder="Viết điều bạn muốn chia sẻ..."
+        placeholder="Viết confession ở đây bạn nhé!!"
         maxlength="2000"
       ></textarea>
       <div class="char-counter" id="charCounter">0 / 2000</div>
@@ -400,6 +560,7 @@
       <p class="privacy-note">
         🔒 Không cần cung cấp thông tin cá nhân. Confession được gửi dưới dạng ẩn danh.
       </p>
+      </div>
     </div>
   </section>
 
@@ -426,6 +587,83 @@ const MAX_CHARS = 2000;
 const MAX_IMAGE_MB = 5;
 const MAX_IMAGE_BYTES = MAX_IMAGE_MB * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
+// ----- Sinh particle lung linh (chỉ hiệu ứng trang trí, không ảnh hưởng dữ liệu) -----
+(function createParticles(){
+  const container = document.getElementById('particles');
+  const COUNT = 26;
+  for (let i = 0; i < COUNT; i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = (Math.random() * 2 + 1.5).toFixed(1); // 1.5px - 3.5px
+    const left = (Math.random() * 100).toFixed(2);
+    const top = (Math.random() * 100).toFixed(2);
+    const dur = (Math.random() * 3 + 2.5).toFixed(2);   // 2.5s - 5.5s
+    const delay = (-Math.random() * 5).toFixed(2);      // lệch pha để không nhấp nháy đồng loạt
+
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = left + '%';
+    p.style.top = top + '%';
+    p.style.setProperty('--dur', dur + 's');
+    p.style.setProperty('--delay', delay + 's');
+
+    container.appendChild(p);
+  }
+})();
+
+// ----- Hiệu ứng ánh sáng đi theo con trỏ chuột trên khung viết confession -----
+// Ánh sáng đóng vai trò như một lớp nền (nằm dưới toàn bộ nội dung).
+// Khi chuột rời khỏi khung, ánh sáng không biến mất mà bị "giam" bên trong
+// khung, vị trí được kẹp (clamp) theo cạnh gần nhất với hướng con trỏ.
+(function initCursorGlow(){
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReducedMotion) return;
+
+  const glowHost = document.getElementById('formCard');
+  if (!glowHost) return;
+  const glow = glowHost.querySelector('.cursor-glow');
+
+  let rect = glowHost.getBoundingClientRect();
+  let targetX = rect.width / 2;
+  let targetY = rect.height / 2;
+  let curX = targetX;
+  let curY = targetY;
+  let started = false;
+  let rafId = null;
+
+  function refreshRect(){ rect = glowHost.getBoundingClientRect(); }
+  window.addEventListener('resize', refreshRect);
+  window.addEventListener('scroll', refreshRect, { passive: true });
+
+  // Theo dõi chuột trên toàn trang, không chỉ trong khung
+  window.addEventListener('mousemove', (e) => {
+    const localX = e.clientX - rect.left;
+    const localY = e.clientY - rect.top;
+
+    // Kẹp tọa độ trong phạm vi khung -> ánh sáng bị "giam cầm" bên trong,
+    // chỉ trượt theo hướng con trỏ khi chuột đã ra ngoài khung
+    targetX = Math.min(Math.max(localX, 0), rect.width);
+    targetY = Math.min(Math.max(localY, 0), rect.height);
+
+    if (!started){
+      started = true;
+      curX = targetX;
+      curY = targetY;
+      glow.classList.add('active');
+      rafId = requestAnimationFrame(animateGlow);
+    }
+  });
+
+  // Easing nhẹ để ánh sáng trượt mượt tới vị trí mới thay vì nhảy giật cục
+  function animateGlow(){
+    curX += (targetX - curX) * 0.15;
+    curY += (targetY - curY) * 0.15;
+    glowHost.style.setProperty('--x', curX + 'px');
+    glowHost.style.setProperty('--y', curY + 'px');
+    rafId = requestAnimationFrame(animateGlow);
+  }
+})();
 
 // ----- Screen elements -----
 const welcomeScreen = document.getElementById('welcomeScreen');
