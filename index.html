@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Yên Sở Confession</title>
 
@@ -41,6 +41,26 @@
 
 *{
   box-sizing:border-box;
+}
+
+
+.sr-only{
+
+  position:absolute;
+
+  width:1px;
+  height:1px;
+
+  padding:0;
+  margin:-1px;
+
+  overflow:hidden;
+
+  clip:rect(0,0,0,0);
+
+  white-space:nowrap;
+
+  border:0;
 }
 
 
@@ -192,6 +212,23 @@ body::before{
 }
 
 
+.aurora span.blob-3{
+
+  width:220px;
+  height:220px;
+
+  background:var(--success);
+
+  top:42%;
+  right:16%;
+
+  opacity:0.12;
+
+  animation:
+    auroraDrift3 18s ease-in-out infinite;
+}
+
+
 @keyframes auroraDrift1{
 
   0%,
@@ -215,6 +252,112 @@ body::before{
 
   50%{
     transform:translate(-45px,-55px);
+  }
+
+}
+
+
+@keyframes auroraDrift3{
+
+  0%,
+  100%{
+    transform:translate(0,0) scale(0.9);
+  }
+
+  50%{
+    transform:translate(-35px,45px) scale(1.1);
+  }
+
+}
+
+
+/* =========================
+   LIGHT STREAKS
+========================= */
+
+.light-streaks{
+
+  position:fixed;
+
+  inset:0;
+
+  z-index:0;
+
+  pointer-events:none;
+
+  overflow:hidden;
+}
+
+
+.light-streaks span{
+
+  position:absolute;
+
+  top:-220px;
+
+  width:1px;
+  height:180px;
+
+  opacity:0;
+
+  background:
+    linear-gradient(
+      180deg,
+      transparent,
+      rgba(232,168,192,0.7),
+      transparent
+    );
+
+  transform:rotate(28deg);
+
+  animation:
+    streakFall
+    var(--streak-duration,12s)
+    linear
+    infinite;
+
+  animation-delay:var(--streak-delay,0s);
+}
+
+
+.light-streaks span:nth-child(1){
+  left:12%;
+}
+
+
+.light-streaks span:nth-child(2){
+  left:38%;
+}
+
+
+.light-streaks span:nth-child(3){
+  left:68%;
+}
+
+
+.light-streaks span:nth-child(4){
+  left:88%;
+}
+
+
+@keyframes streakFall{
+
+  0%{
+    opacity:0;
+    transform:translate(0,0) rotate(28deg);
+  }
+
+  12%{
+    opacity:0.5;
+  }
+
+  32%{
+    opacity:0;
+  }
+
+  100%{
+    opacity:0;
+    transform:translate(170px,100vh) rotate(28deg);
   }
 
 }
@@ -289,7 +432,12 @@ body::before{
 
   body::before,
   .aurora span,
-  .particle{
+  .particle,
+  .light-streaks span,
+  .screen.active,
+  .eyebrow .sparkle,
+  .form-header h2,
+  .success-icon{
 
     animation:none !important;
 
@@ -365,6 +513,10 @@ body::before{
 
 .card{
 
+  position:relative;
+
+  overflow:hidden;
+
   background:
     linear-gradient(
       180deg,
@@ -383,6 +535,93 @@ body::before{
 
   box-shadow:
     var(--shadow-soft);
+}
+
+
+@property --edge-angle{
+
+  syntax:"<angle>";
+
+  inherits:false;
+
+  initial-value:0deg;
+}
+
+
+.card::before{
+
+  content:"";
+
+  position:absolute;
+
+  inset:0;
+
+  padding:1px;
+
+  border-radius:inherit;
+
+  background:
+    conic-gradient(
+      from var(--edge-angle),
+      transparent 0deg,
+      transparent 300deg,
+      rgba(255,255,255,0.05) 322deg,
+      rgba(255,255,255,0.85) 344deg,
+      transparent 360deg
+    );
+
+  opacity:0.7;
+
+  pointer-events:none;
+
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+
+  -webkit-mask-composite:xor;
+
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+
+  mask-composite:exclude;
+
+  animation:
+    edgeOrbit
+    7s
+    linear
+    infinite;
+}
+
+
+@keyframes edgeOrbit{
+
+  to{
+    --edge-angle:360deg;
+  }
+
+}
+
+
+@media(min-width:700px){
+
+  .card{
+
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+
+  .card:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+      0 24px 70px -24px rgba(0,0,0,0.75),
+      0 0 0 1px rgba(232,168,192,0.08);
+  }
+
 }
 
 
@@ -1094,6 +1333,24 @@ textarea#confessionText.input-error{
 
   <span class="blob-2"></span>
 
+  <span class="blob-3"></span>
+
+</div>
+
+
+<div
+  class="light-streaks"
+  aria-hidden="true"
+>
+
+  <span style="--streak-duration:13s;--streak-delay:-3s"></span>
+
+  <span style="--streak-duration:17s;--streak-delay:-11s"></span>
+
+  <span style="--streak-duration:15s;--streak-delay:-7s"></span>
+
+  <span style="--streak-duration:19s;--streak-delay:-15s"></span>
+
 </div>
 
 
@@ -1218,14 +1475,24 @@ textarea#confessionText.input-error{
 
         <textarea
           id="confessionText"
+          aria-describedby="charCounter textError"
+          aria-invalid="false"
           placeholder="Viết confession ở đây bạn nhé!!"
           maxlength="2000"
         ></textarea>
+
+        <label
+          class="sr-only"
+          for="confessionText"
+        >
+          Nội dung confession
+        </label>
 
 
         <div
           class="char-counter"
           id="charCounter"
+          aria-live="polite"
         >
           0 / 2000
         </div>
@@ -1234,6 +1501,7 @@ textarea#confessionText.input-error{
         <div
           class="field-error"
           id="textError"
+          role="alert"
         ></div>
 
 
@@ -1251,7 +1519,10 @@ textarea#confessionText.input-error{
 
             <span class="spinner"></span>
 
-            <span class="btn-label">
+            <span
+              class="btn-label"
+              aria-live="polite"
+            >
               Gửi Confession
             </span>
 
@@ -1261,6 +1532,8 @@ textarea#confessionText.input-error{
           <div
             class="status-line"
             id="statusLine"
+            role="status"
+            aria-live="polite"
           ></div>
 
         </div>
@@ -1686,6 +1959,19 @@ function showScreen(screenEl){
     'active'
   );
 
+
+  const firstControl =
+    screenEl.querySelector(
+      'textarea, button'
+    );
+
+
+  if(firstControl){
+
+    firstControl.focus();
+
+  }
+
 }
 
 
@@ -1761,6 +2047,11 @@ function showFieldError(
       'input-error'
     );
 
+    inputEl.setAttribute(
+      'aria-invalid',
+      'true'
+    );
+
   }
 
 }
@@ -1786,6 +2077,11 @@ function clearFieldError(
       'input-error'
     );
 
+    inputEl.setAttribute(
+      'aria-invalid',
+      'false'
+    );
+
   }
 
 }
@@ -1798,6 +2094,12 @@ function clearFieldError(
 submitBtn.addEventListener(
   'click',
   async () => {
+
+    if(submitBtn.disabled){
+
+      return;
+
+    }
 
     clearFieldError(
       textError,
@@ -1967,8 +2269,25 @@ async function submitConfession(
   }
 
 
-  const result =
-    await response.json();
+  const responseText =
+    await response.text();
+
+
+  let result;
+
+
+  try{
+
+    result =
+      JSON.parse(responseText);
+
+  }catch(error){
+
+    throw new Error(
+      "Máy chủ trả về dữ liệu không hợp lệ."
+    );
+
+  }
 
 
   if(!result.success){
