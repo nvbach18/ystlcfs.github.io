@@ -45,21 +45,14 @@
 
 
 .sr-only{
-
   position:absolute;
-
   width:1px;
   height:1px;
-
   padding:0;
   margin:-1px;
-
   overflow:hidden;
-
   clip:rect(0,0,0,0);
-
   white-space:nowrap;
-
   border:0;
 }
 
@@ -68,316 +61,137 @@ html,
 body{
   margin:0;
   padding:0;
-  height:100%;
+  min-height:100%;
 
   background:
-    radial-gradient(
-      circle at 20% 0%,
-      #2a2140 0%,
-      transparent 55%
-    ),
-
-    radial-gradient(
-      circle at 85% 15%,
-      #241a34 0%,
-      transparent 45%
-    ),
-
-    linear-gradient(
-      180deg,
-      var(--bg-deep) 0%,
-      var(--bg-deep-2) 100%
-    );
+    radial-gradient(circle at 20% 0%, #2a2140 0%, transparent 55%),
+    radial-gradient(circle at 85% 15%, #241a34 0%, transparent 45%),
+    linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-deep-2) 100%);
 
   color:var(--text-main);
-
-  font-family:
-    'Inter',
-    -apple-system,
-    BlinkMacSystemFont,
-    sans-serif;
-
+  font-family:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing:antialiased;
 }
 
 
-/* =========================
-   ÁNH SÁNG NỀN
-========================= */
-
 body::before{
-
   content:"";
-
   position:fixed;
-
   top:12%;
   left:50%;
-
   width:480px;
   height:480px;
-
   transform:translateX(-50%);
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(232,168,192,0.16) 0%,
-      rgba(232,168,192,0) 70%
-    );
-
+  background:radial-gradient(circle, rgba(232,168,192,0.16) 0%, rgba(232,168,192,0) 70%);
   pointer-events:none;
-
   z-index:0;
-
-  animation:
-    candleBreath 7s ease-in-out infinite;
+  animation:candleBreath 7s ease-in-out infinite;
 }
 
 
 @keyframes candleBreath{
-
-  0%,
-  100%{
-    opacity:0.7;
-    transform:
-      translateX(-50%)
-      scale(1);
-  }
-
-  50%{
-    opacity:1;
-    transform:
-      translateX(-50%)
-      scale(1.08);
-  }
-
+  0%, 100%{ opacity:0.7; transform:translateX(-50%) scale(1); }
+  50%{ opacity:1; transform:translateX(-50%) scale(1.08); }
 }
 
 
-/* =========================
-   AURORA
-========================= */
-
 .aurora{
-
   position:fixed;
-
   inset:0;
-
   z-index:0;
-
   pointer-events:none;
-
   overflow:hidden;
 }
 
 
 .aurora span{
-
   position:absolute;
-
   width:320px;
   height:320px;
-
   border-radius:50%;
-
   filter:blur(85px);
-
   opacity:0.32;
 }
 
 
 .aurora span.blob-1{
-
   background:var(--accent-2);
-
   top:-60px;
   left:-70px;
-
-  animation:
-    auroraDrift1 20s ease-in-out infinite;
+  animation:auroraDrift1 20s ease-in-out infinite;
 }
 
 
 .aurora span.blob-2{
-
   background:var(--accent);
-
   bottom:-90px;
   right:-70px;
-
-  animation:
-    auroraDrift2 24s ease-in-out infinite;
+  animation:auroraDrift2 24s ease-in-out infinite;
 }
 
 
 .aurora span.blob-3{
-
   width:220px;
   height:220px;
-
   background:var(--success);
-
   top:42%;
   right:16%;
-
   opacity:0.12;
-
-  animation:
-    auroraDrift3 18s ease-in-out infinite;
+  animation:auroraDrift3 18s ease-in-out infinite;
 }
 
 
 @keyframes auroraDrift1{
-
-  0%,
-  100%{
-    transform:translate(0,0);
-  }
-
-  50%{
-    transform:translate(50px,60px);
-  }
-
+  0%, 100%{ transform:translate(0,0); }
+  50%{ transform:translate(50px,60px); }
 }
 
 
 @keyframes auroraDrift2{
-
-  0%,
-  100%{
-    transform:translate(0,0);
-  }
-
-  50%{
-    transform:translate(-45px,-55px);
-  }
-
+  0%, 100%{ transform:translate(0,0); }
+  50%{ transform:translate(-45px,-55px); }
 }
 
 
 @keyframes auroraDrift3{
-
-  0%,
-  100%{
-    transform:translate(0,0) scale(0.9);
-  }
-
-  50%{
-    transform:translate(-35px,45px) scale(1.1);
-  }
-
+  0%, 100%{ transform:translate(0,0) scale(0.9); }
+  50%{ transform:translate(-35px,45px) scale(1.1); }
 }
 
 
-/* =========================
-   LIGHT STREAKS
-========================= */
-
 .light-streaks{
-
   position:fixed;
-
   inset:0;
-
   z-index:0;
-
   pointer-events:none;
-
   overflow:hidden;
 }
 
 
 .light-streaks span{
-
   position:absolute;
-
   top:-220px;
-
   width:1px;
   height:180px;
-
   opacity:0;
-
-  background:
-    linear-gradient(
-      180deg,
-      transparent,
-      rgba(232,168,192,0.7),
-      transparent
-    );
-
+  background:linear-gradient(180deg, transparent, rgba(232,168,192,0.7), transparent);
   transform:rotate(28deg);
-
-  animation:
-    streakFall
-    var(--streak-duration,12s)
-    linear
-    infinite;
-
+  animation:streakFall var(--streak-duration,12s) linear infinite;
   animation-delay:var(--streak-delay,0s);
 }
 
 
-.light-streaks span:nth-child(1){
-  left:12%;
-}
-
-
-.light-streaks span:nth-child(2){
-  left:38%;
-}
-
-
-.light-streaks span:nth-child(3){
-  left:68%;
-}
-
-
-.light-streaks span:nth-child(4){
-  left:88%;
-}
+.light-streaks span:nth-child(1){ left:12%; }
+.light-streaks span:nth-child(2){ left:38%; }
+.light-streaks span:nth-child(3){ left:68%; }
+.light-streaks span:nth-child(4){ left:88%; }
 
 
 @keyframes streakFall{
-
-  0%{
-    opacity:0;
-    transform:translate(0,0) rotate(28deg);
-  }
-
-  12%{
-    opacity:0.5;
-  }
-
-  32%{
-    opacity:0;
-  }
-
-  100%{
-    opacity:0;
-    transform:translate(170px,100vh) rotate(28deg);
-  }
-
-}
-
-
-/* =========================
-   PARTICLES
-========================= */
-
-.particles{
-
-  position:fixed;
-
-  inset:0;
-
-  z-index:0;
-
-  pointer-events:none;
-
-  overflow:hidden;
+  0%{ opacity:0; transform:translate(0,0) rotate(28deg); }
+  12%{ opacity:0.5; }
+  32%{ opacity:0; }
+  100%{ opacity:0; transform:translate(170px,100vh) rotate(28deg); }
 }
 
 
@@ -535,6 +349,123 @@ body::before{
 
   box-shadow:
     var(--shadow-soft);
+}
+
+
+/* =========================
+  FACEBOOK BUTTON
+========================= */
+
+.facebook-cluster{
+
+  position:fixed;
+
+  left:22px;
+  bottom:22px;
+
+  z-index:5;
+
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+
+.facebook-float{
+
+  display:grid;
+  place-items:center;
+
+  width:54px;
+  height:54px;
+
+  color:#fff;
+  text-decoration:none;
+
+  border:1px solid rgba(255,255,255,0.22);
+  border-radius:50%;
+
+  background:transparent;
+
+  box-shadow:0 5px 14px rgba(0,0,0,0.22);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+
+.facebook-label{
+
+  color:rgba(255,255,255,0.72);
+
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:0.14em;
+  white-space:nowrap;
+
+  text-shadow:0 2px 8px rgba(0,0,0,0.35);
+}
+
+
+.facebook-float svg{
+
+  position:relative;
+  z-index:1;
+
+  width:25px;
+  height:25px;
+
+  fill:currentColor;
+
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,0.25));
+}
+
+
+.facebook-float:hover,
+.facebook-float:focus-visible{
+
+  transform:translateY(-1px);
+
+  border-color:rgba(255,255,255,0.32);
+
+  box-shadow:0 6px 15px rgba(0,0,0,0.25);
+}
+
+
+.facebook-float:focus-visible{
+
+  outline:2px solid var(--accent);
+  outline-offset:4px;
+}
+
+
+@media(max-width:480px){
+
+  .facebook-float{
+
+    width:50px;
+    height:50px;
+    border-radius:50%;
+  }
+
+
+  .facebook-cluster{
+
+    left:16px;
+    bottom:16px;
+    gap:8px;
+  }
+
+
+  .facebook-label{
+
+    font-size:10px;
+    letter-spacing:0.1em;
+  }
+
+
 }
 
 
@@ -1364,6 +1295,33 @@ textarea#confessionText.input-error{
 </div>
 
 
+<div class="facebook-cluster">
+
+  <a
+    class="facebook-float"
+    href="https://www.facebook.com/CFSYbeta/"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Mở trang Facebook Yên Sở Confession"
+    title="Facebook Yên Sở Confession"
+  >
+
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path d="M14 8h3V4h-3c-3.31 0-5 1.69-5 5v3H6v4h3v8h4v-8h3.2l.8-4H13V9c0-.67.33-1 1-1Z"/>
+    </svg>
+
+  </a>
+
+  <span class="facebook-label">
+    YEN SO CONFESSION
+  </span>
+
+</div>
+
+
 <!-- =========================
      APP
 ========================= -->
@@ -1399,7 +1357,7 @@ textarea#confessionText.input-error{
 
       <h1 class="title">
 
-        Chào mừng bạn đến với
+        Chào mừng bạn đến với<br>
         Yên Sở Confession
 
       </h1>
