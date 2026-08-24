@@ -801,6 +801,93 @@ sendAnotherBtn.addEventListener(
 );
 
 
+const motionToggle =
+  document.getElementById(
+    'motionToggle'
+  );
+
+
+function setMotionDisabled(
+  isDisabled
+){
+
+  document.documentElement.classList.toggle(
+    'no-motion',
+    isDisabled
+  );
+
+  motionToggle.setAttribute(
+    'aria-pressed',
+    String(isDisabled)
+  );
+
+  const label =
+    isDisabled
+      ? 'Bật animation'
+      : 'Tắt animation';
+
+  motionToggle.setAttribute(
+    'aria-label',
+    label
+  );
+
+  motionToggle.setAttribute(
+    'title',
+    label
+  );
+
+}
+
+
+let motionDisabled = false;
+
+
+try{
+
+  motionDisabled =
+    localStorage.getItem(
+      'yen-so-confession-no-motion'
+    ) === 'true';
+
+}catch(error){
+
+  motionDisabled = false;
+
+}
+
+
+setMotionDisabled(
+  motionDisabled
+);
+
+
+motionToggle.addEventListener(
+  'click',
+  () => {
+
+    motionDisabled =
+      !motionDisabled;
+
+    setMotionDisabled(
+      motionDisabled
+    );
+
+
+    try{
+
+      localStorage.setItem(
+        'yen-so-confession-no-motion',
+        String(motionDisabled)
+      );
+
+    }catch(error){
+
+    }
+
+  }
+);
+
+
 document.addEventListener(
   'contextmenu',
   (event) => {
