@@ -1,0 +1,293 @@
+const SHEET_NAME = "CFS1";
+const SPREADSHEET_ID = "1aS19SXpTpl9DR-FMuY3_LE17HlYN1hxSNarYXcwtZQ4";
+const MAX_CONTENT_LENGTH = 2000;
+const SPAM_COOLDOWN_SECONDS = 20;
+
+
+function doPost(e) {
+
+  let lock;
+
+  try {
+
+    // =========================
+    // LẤY SHEET
+    // =========================
+
+    const spreadsheet =
+      SpreadsheetApp
+        .openById(
+          SPREADSHEET_ID
+        );
+
+
+    const sheet =
+      spreadsheet
+        .getSheetByName(
+          SHEET_NAME
+        );
+
+
+    if (!sheet) {
+
+      throw new Error(
+        "Không tìm thấy Sheet: " +
+        SHEET_NAME
+      );
+
+    }
+
+
+    // =========================
+    // KIỂM TRA DỮ LIỆU
+    // =========================
+
+    if (
+      !e ||
+      !e.postData ||
+      !e.postData.contents
+    ) {
+
+      throw new Error(
+        "Không nhận được dữ liệu."
+      );
+
+    }
+
+
+    // =========================
+    // ĐỌC JSON
+    // =========================
+
+    let data;
+
+    try {
+
+      data =
+        JSON.parse(
+          e.postData.contents
+        );
+
+    } catch (error) {
+
+      throw new Error(
+        "Dữ liệu gửi lên không hợp lệ."
+      );
+
+    }
+
+
+    if (
+      !data ||
+      typeof data.content !== "string"
+    ) {
+
+      throw new Error(
+        "Nội dung confession không hợp lệ."
+      );
+
+    }
+
+
+    if (data.website) {
+
+      throw new Error(
+        "Yêu cầu không hợp lệ."
+      );
+
+    }
+
+
+    const clientId =
+      typeof data.clientId === "string"
+        ? data.clientId.trim()
+        : "";
+
+
+    if (
+      !/^[a-zA-Z0-9_-]{16,80}$/.test(clientId)
+    ) {
+
+      throw new Error(
+        "Không thể xác thực yêu cầu."
+      );
+
+    }
+
+
+    const cache =
+      CacheService
+        .getScriptCache();
+
+    const rateLimitKey =
+      "cfs-rate-" + clientId;
+
+
+    if (cache.get(rateLimitKey)) {
+
+      throw new Error(
+        "Bạn gửi hơi nhanh, vui lòng thử lại sau ít giây."
+      );
+
+    }
+
+
+    cache.put(
+      rateLimitKey,
+      "1",
+      SPAM_COOLDOWN_SECONDS
+    );
+
+
+    // =========================
+    // TẠO ID
+    // =========================
+
+    // =========================
+    // NỘI DUNG
+    // =========================
+
+    const content =
+      data.content.trim();
+
+
+    if (
+      content.length > MAX_CONTENT_LENGTH
+    ) {
+
+      throw new Error(
+        "Nội dung confession vượt quá giới hạn."
+      );
+
+    }
+
+
+    // =========================
+    // TRẠNG THÁI
+    // =========================
+
+    const status =
+      "Chờ duyệt";
+
+
+    // =========================
+    // KIỂM TRA NỘI DUNG
+    // =========================
+
+    if (
+      content.length === 0
+    ) {
+
+      throw new Error(
+        "Nội dung confession trống."
+      );
+
+    }
+
+
+    lock =
+      LockService
+        .getScriptLock();
+
+
+    if (!lock.tryLock(5000)) {
+
+      throw new Error(
+        "Hệ thống đang bận, vui lòng thử lại."
+      );
+
+    }
+
+
+    const id =
+      "CFS-" +
+      Utilities
+        .getUuid()
+        .replace(/-/g, "")
+        .substring(0, 6)
+        .toUpperCase();
+
+
+    const timestamp =
+      new Date();
+
+
+    // =========================
+    // GHI VÀO GOOGLE SHEETS
+    // =========================
+
+    sheet.appendRow([
+
+      id,
+
+      timestamp,
+
+      content,
+
+      status
+
+    ]);
+
+
+    // =========================
+    // TRẢ KẾT QUẢ THÀNH CÔNG
+    // =========================
+
+    return ContentService
+
+      .createTextOutput(
+
+        JSON.stringify({
+
+          success:true,
+          id:id
+
+        })
+
+      )
+
+      .setMimeType(
+        ContentService.MimeType.JSON
+      );
+
+
+  } catch(error) {
+
+
+    // =========================
+    // TRẢ LỖI
+    // =========================
+
+    console.error(error);
+
+    return ContentService
+
+      .createTextOutput(
+
+        JSON.stringify({
+
+          success:false,
+
+          error:error && error.message
+            ? error.message
+            : "Không thể xử lý confession lúc này."
+
+        })
+
+      )
+
+      .setMimeType(
+        ContentService.MimeType.JSON
+      );
+
+  } finally {
+
+    if (lock) {
+
+      lock.releaseLock();
+
+    }
+
+  }
+
+}

@@ -1,0 +1,2412 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Yên Sở Confession</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+  --bg-deep: #16131f;
+  --bg-deep-2: #1f1a2c;
+  --surface: #241f33;
+  --surface-2: #2c2640;
+
+  --line: rgba(255,255,255,0.08);
+
+  --text-main: #ece8f5;
+  --text-muted: #a79fc0;
+  --text-faint: #786f93;
+
+  --accent: #e8a8c0;
+  --accent-2: #c9a6f0;
+  --accent-strong: #dd8bab;
+
+  --danger: #f2879a;
+  --success: #9fd8b0;
+
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+
+  --shadow-soft:
+    0 20px 60px -20px rgba(0,0,0,0.55);
+}
+
+
+*{
+  box-sizing:border-box;
+}
+
+
+.sr-only{
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
+}
+
+
+html,
+body{
+  margin:0;
+  padding:0;
+  min-height:100%;
+
+  background:
+    radial-gradient(circle at 20% 0%, #2a2140 0%, transparent 55%),
+    radial-gradient(circle at 85% 15%, #241a34 0%, transparent 45%),
+    linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-deep-2) 100%);
+
+  color:var(--text-main);
+  font-family:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+
+body::before{
+  content:"";
+  position:fixed;
+  top:12%;
+  left:50%;
+  width:480px;
+  height:480px;
+  transform:translateX(-50%);
+  background:radial-gradient(circle, rgba(232,168,192,0.16) 0%, rgba(232,168,192,0) 70%);
+  pointer-events:none;
+  z-index:0;
+  animation:candleBreath 7s ease-in-out infinite;
+}
+
+
+@keyframes candleBreath{
+  0%, 100%{ opacity:0.7; transform:translateX(-50%) scale(1); }
+  50%{ opacity:1; transform:translateX(-50%) scale(1.08); }
+}
+
+
+.aurora{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+
+.aurora span{
+  position:absolute;
+  width:320px;
+  height:320px;
+  border-radius:50%;
+  filter:blur(85px);
+  opacity:0.32;
+}
+
+
+.aurora span.blob-1{
+  background:var(--accent-2);
+  top:-60px;
+  left:-70px;
+  animation:auroraDrift1 20s ease-in-out infinite;
+}
+
+
+.aurora span.blob-2{
+  background:var(--accent);
+  bottom:-90px;
+  right:-70px;
+  animation:auroraDrift2 24s ease-in-out infinite;
+}
+
+
+.aurora span.blob-3{
+  width:220px;
+  height:220px;
+  background:var(--success);
+  top:42%;
+  right:16%;
+  opacity:0.12;
+  animation:auroraDrift3 18s ease-in-out infinite;
+}
+
+
+@keyframes auroraDrift1{
+  0%, 100%{ transform:translate(0,0); }
+  50%{ transform:translate(50px,60px); }
+}
+
+
+@keyframes auroraDrift2{
+  0%, 100%{ transform:translate(0,0); }
+  50%{ transform:translate(-45px,-55px); }
+}
+
+
+@keyframes auroraDrift3{
+  0%, 100%{ transform:translate(0,0) scale(0.9); }
+  50%{ transform:translate(-35px,45px) scale(1.1); }
+}
+
+
+.light-streaks{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+
+.light-streaks span{
+  position:absolute;
+  top:-220px;
+  width:1px;
+  height:180px;
+  opacity:0;
+  background:linear-gradient(180deg, transparent, rgba(232,168,192,0.7), transparent);
+  transform:rotate(28deg);
+  animation:streakFall var(--streak-duration,12s) linear infinite;
+  animation-delay:var(--streak-delay,0s);
+}
+
+
+.light-streaks span:nth-child(1){ left:12%; }
+.light-streaks span:nth-child(2){ left:38%; }
+.light-streaks span:nth-child(3){ left:68%; }
+.light-streaks span:nth-child(4){ left:88%; }
+
+
+@keyframes streakFall{
+  0%{ opacity:0; transform:translate(0,0) rotate(28deg); }
+  12%{ opacity:0.5; }
+  32%{ opacity:0; }
+  100%{ opacity:0; transform:translate(170px,100vh) rotate(28deg); }
+}
+
+
+.particle{
+
+  position:absolute;
+
+  border-radius:50%;
+
+  background:#fff;
+
+  box-shadow:
+    0 0 6px 1px
+    rgba(255,255,255,0.75);
+
+  animation:
+    twinkle
+    var(--dur,4s)
+    ease-in-out
+    infinite;
+
+  animation-delay:
+    var(--delay,0s);
+}
+
+
+@keyframes twinkle{
+
+  0%,
+  100%{
+    opacity:0.12;
+
+    transform:
+      scale(0.7)
+      translateY(0);
+  }
+
+  50%{
+    opacity:0.85;
+
+    transform:
+      scale(1.2)
+      translateY(-6px);
+  }
+
+}
+
+
+@media(
+  prefers-reduced-motion:reduce
+){
+
+  body::before,
+  .aurora span,
+  .particle,
+  .light-streaks span,
+  .screen.active,
+  .eyebrow .sparkle,
+  .form-header h2,
+  .success-icon{
+
+    animation:none !important;
+
+  }
+
+}
+
+
+/* =========================
+   APP
+========================= */
+
+.app{
+
+  position:relative;
+
+  z-index:1;
+
+  min-height:100vh;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  padding:24px;
+}
+
+
+.screen{
+
+  width:100%;
+
+  max-width:480px;
+
+  display:none;
+}
+
+
+.screen.active{
+
+  display:block;
+
+  animation:
+    fadeSlideIn
+    0.45s ease;
+}
+
+
+@keyframes fadeSlideIn{
+
+  from{
+    opacity:0;
+
+    transform:
+      translateY(14px);
+  }
+
+  to{
+    opacity:1;
+
+    transform:
+      translateY(0);
+  }
+
+}
+
+
+/* =========================
+   CARD
+========================= */
+
+.card{
+
+  position:relative;
+
+  overflow:hidden;
+
+  background:
+    linear-gradient(
+      180deg,
+      var(--surface) 0%,
+      var(--surface-2) 100%
+    );
+
+  border:
+    1px solid var(--line);
+
+  border-radius:
+    var(--radius-lg);
+
+  padding:
+    40px 32px;
+
+  box-shadow:
+    var(--shadow-soft);
+}
+
+
+/* =========================
+  FACEBOOK BUTTON
+========================= */
+
+.facebook-cluster{
+
+  position:fixed;
+
+  left:22px;
+  bottom:22px;
+
+  z-index:5;
+
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+
+.facebook-float{
+
+  display:grid;
+  place-items:center;
+
+  width:54px;
+  height:54px;
+
+  color:#fff;
+  text-decoration:none;
+
+  border:1px solid rgba(255,255,255,0.22);
+  border-radius:50%;
+
+  background:transparent;
+
+  box-shadow:0 5px 14px rgba(0,0,0,0.22);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+
+.facebook-label{
+
+  color:rgba(255,255,255,0.72);
+
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:0.14em;
+  white-space:nowrap;
+
+  text-shadow:0 2px 8px rgba(0,0,0,0.35);
+}
+
+
+.facebook-float svg{
+
+  position:relative;
+  z-index:1;
+
+  width:25px;
+  height:25px;
+
+  fill:currentColor;
+
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,0.25));
+}
+
+
+.facebook-float:hover,
+.facebook-float:focus-visible{
+
+  transform:translateY(-1px);
+
+  border-color:rgba(255,255,255,0.32);
+
+  box-shadow:0 6px 15px rgba(0,0,0,0.25);
+}
+
+
+.facebook-float:focus-visible{
+
+  outline:2px solid var(--accent);
+  outline-offset:4px;
+}
+
+
+@media(max-width:480px){
+
+  .facebook-float{
+
+    width:50px;
+    height:50px;
+    border-radius:50%;
+  }
+
+
+  .facebook-cluster{
+
+    left:16px;
+    bottom:16px;
+    gap:8px;
+  }
+
+
+  .facebook-label{
+
+    font-size:10px;
+    letter-spacing:0.1em;
+  }
+
+
+}
+
+
+@property --edge-angle{
+
+  syntax:"<angle>";
+
+  inherits:false;
+
+  initial-value:0deg;
+}
+
+
+.card::before{
+
+  content:"";
+
+  position:absolute;
+
+  inset:0;
+
+  padding:1px;
+
+  border-radius:inherit;
+
+  background:
+    conic-gradient(
+      from var(--edge-angle),
+      transparent 0deg,
+      transparent 300deg,
+      rgba(255,255,255,0.05) 322deg,
+      rgba(255,255,255,0.85) 344deg,
+      transparent 360deg
+    );
+
+  opacity:0.7;
+
+  pointer-events:none;
+
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+
+  -webkit-mask-composite:xor;
+
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+
+  mask-composite:exclude;
+
+  animation:
+    edgeOrbit
+    7s
+    linear
+    infinite;
+}
+
+
+@keyframes edgeOrbit{
+
+  to{
+    --edge-angle:360deg;
+  }
+
+}
+
+
+@media(min-width:700px){
+
+  .card{
+
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+
+  .card:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+      0 24px 70px -24px rgba(0,0,0,0.75),
+      0 0 0 1px rgba(232,168,192,0.08);
+  }
+
+}
+
+
+/* =========================
+   CURSOR GLOW
+========================= */
+
+.card-glow-host{
+
+  position:relative;
+
+  overflow:hidden;
+}
+
+
+.cursor-glow{
+
+  position:absolute;
+
+  inset:0;
+
+  pointer-events:none;
+
+  background:
+    radial-gradient(
+      280px circle
+      at var(--x,50%)
+      var(--y,50%),
+      rgba(232,168,192,0.18),
+      transparent 70%
+    );
+
+  opacity:0;
+
+  transition:
+    opacity 0.4s ease;
+
+  z-index:0;
+}
+
+
+.cursor-glow.active{
+
+  opacity:1;
+
+}
+
+
+.card-content{
+
+  position:relative;
+
+  z-index:1;
+}
+
+
+@media(
+  prefers-reduced-motion:reduce
+){
+
+  .cursor-glow{
+    display:none;
+  }
+
+}
+
+
+/* =========================
+   WELCOME
+========================= */
+
+.welcome-card{
+
+  text-align:center;
+}
+
+
+.eyebrow{
+
+  display:inline-flex;
+
+  align-items:center;
+
+  gap:8px;
+
+  font-size:12px;
+
+  letter-spacing:0.14em;
+
+  text-transform:uppercase;
+
+  color:var(--accent);
+
+  margin-bottom:18px;
+
+  font-weight:600;
+}
+
+
+.eyebrow .sparkle{
+
+  display:inline-block;
+
+  animation:
+    sparkleSpin
+    3.5s
+    ease-in-out
+    infinite;
+}
+
+
+@keyframes sparkleSpin{
+
+  0%,
+  100%{
+    transform:
+      scale(1)
+      rotate(0deg);
+
+    opacity:0.85;
+  }
+
+  50%{
+    transform:
+      scale(1.25)
+      rotate(15deg);
+
+    opacity:1;
+  }
+
+}
+
+
+h1.title{
+
+  font-family:
+    'Fraunces',
+    serif;
+
+  font-weight:500;
+
+  font-size:32px;
+
+  line-height:1.25;
+
+  margin:
+    0 0 14px;
+
+  color:var(--text-main);
+
+  text-shadow:
+    0 0 26px
+    rgba(232,168,192,0.25);
+}
+
+
+p.subtitle{
+
+  font-size:15px;
+
+  line-height:1.6;
+
+  color:var(--text-muted);
+
+  margin:
+    0 0 32px;
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+
+.btn{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  gap:8px;
+
+  width:100%;
+
+  border:none;
+
+  border-radius:var(--radius-md);
+
+  padding:17px 20px;
+
+  font-family:
+    'Inter',
+    sans-serif;
+
+  font-size:16px;
+
+  font-weight:600;
+
+  cursor:pointer;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    opacity 0.15s ease;
+}
+
+
+.btn:active{
+
+  transform:scale(0.98);
+
+}
+
+
+.btn-primary{
+
+  position:relative;
+
+  overflow:hidden;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--accent) 0%,
+      var(--accent-2) 100%
+    );
+
+  color:#241428;
+
+  box-shadow:
+    0 10px 30px -8px
+    rgba(232,168,192,0.45);
+}
+
+
+.btn-primary:hover{
+
+  box-shadow:
+    0 12px 34px -6px
+    rgba(232,168,192,0.6);
+}
+
+
+.btn-primary:disabled{
+
+  opacity:0.55;
+
+  cursor:not-allowed;
+
+  box-shadow:none;
+}
+
+
+.btn-primary::after{
+
+  content:"";
+
+  position:absolute;
+
+  top:0;
+
+  left:-60%;
+
+  width:40%;
+
+  height:100%;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent,
+      rgba(255,255,255,0.55),
+      transparent
+    );
+
+  transform:skewX(-20deg);
+
+  transition:
+    left 0.7s ease;
+}
+
+
+.btn-primary:hover::after{
+
+  left:130%;
+
+}
+
+
+/* =========================
+   FORM
+========================= */
+
+.form-header{
+
+  text-align:center;
+
+  margin-bottom:26px;
+}
+
+
+.form-header h2{
+
+  font-family:
+    'Fraunces',
+    serif;
+
+  font-size:26px;
+
+  font-weight:500;
+
+  margin:
+    0 0 8px;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--accent) 0%,
+      var(--accent-2) 25%,
+      var(--text-main) 50%,
+      var(--accent-2) 75%,
+      var(--accent) 100%
+    );
+
+  background-size:
+    250% auto;
+
+  -webkit-background-clip:text;
+
+  background-clip:text;
+
+  color:transparent;
+
+  -webkit-text-fill-color:transparent;
+
+  animation:
+    gradientFlow
+    6s linear infinite;
+}
+
+
+@keyframes gradientFlow{
+
+  0%{
+    background-position:
+      0% 50%;
+  }
+
+  100%{
+    background-position:
+      250% 50%;
+  }
+
+}
+
+
+.form-header .hint{
+
+  font-size:13px;
+
+  color:var(--text-faint);
+
+  margin:0;
+}
+
+
+/* =========================
+   TEXTAREA
+========================= */
+
+textarea#confessionText{
+
+  width:100%;
+
+  min-height:180px;
+
+  max-height:420px;
+
+  resize:vertical;
+
+  background:
+    rgba(0,0,0,0.18);
+
+  border:
+    1px solid var(--line);
+
+  border-radius:
+    var(--radius-md);
+
+  color:var(--text-main);
+
+  font-family:
+    'Inter',
+    sans-serif;
+
+  font-size:15px;
+
+  line-height:1.6;
+
+  padding:16px;
+
+  outline:none;
+
+  transition:
+    border-color 0.15s ease;
+}
+
+
+textarea#confessionText::placeholder{
+
+  color:var(--text-faint);
+
+}
+
+
+textarea#confessionText:focus{
+
+  border-color:
+    var(--accent);
+
+}
+
+
+textarea#confessionText.input-error{
+
+  border-color:
+    var(--danger);
+
+}
+
+
+/* =========================
+   COUNTER
+========================= */
+
+.char-counter{
+
+  text-align:right;
+
+  font-size:12px;
+
+  color:var(--text-faint);
+
+  margin-top:6px;
+}
+
+
+.char-counter.limit-near{
+
+  color:var(--danger);
+
+}
+
+
+/* =========================
+   ERROR
+========================= */
+
+.field-error{
+
+  display:none;
+
+  font-size:13px;
+
+  color:var(--danger);
+
+  margin-top:8px;
+}
+
+
+.field-error.active{
+
+  display:block;
+
+}
+
+
+.status-line{
+
+  display:none;
+
+  font-size:13px;
+
+  color:var(--text-muted);
+
+  text-align:center;
+
+  margin-top:12px;
+}
+
+
+.status-line.active{
+
+  display:block;
+
+}
+
+
+/* =========================
+   SUBMIT
+========================= */
+
+.submit-block{
+
+  margin-top:22px;
+}
+
+
+.privacy-note{
+
+  font-size:12px;
+
+  color:var(--text-faint);
+
+  text-align:center;
+
+  margin-top:22px;
+
+  line-height:1.5;
+}
+
+
+/* =========================
+   SPINNER
+========================= */
+
+.spinner{
+
+  width:16px;
+
+  height:16px;
+
+  border:
+    2px solid
+    rgba(36,20,40,0.35);
+
+  border-top-color:
+    #241428;
+
+  border-radius:50%;
+
+  animation:
+    spin
+    0.7s
+    linear
+    infinite;
+
+  display:none;
+}
+
+
+.btn-primary.loading .spinner{
+
+  display:inline-block;
+
+}
+
+
+.btn-primary.loading .btn-label{
+
+  opacity:0.85;
+
+}
+
+
+@keyframes spin{
+
+  to{
+    transform:rotate(360deg);
+  }
+
+}
+
+
+/* =========================
+   SUCCESS
+========================= */
+
+.success-card{
+
+  text-align:center;
+}
+
+
+.success-icon{
+
+  font-size:44px;
+
+  margin-bottom:14px;
+
+  display:inline-block;
+
+  animation:
+    successPop
+    0.6s
+    ease;
+}
+
+
+@keyframes successPop{
+
+  0%{
+    transform:
+      scale(0.4)
+      rotate(-10deg);
+
+    opacity:0;
+  }
+
+  60%{
+    transform:
+      scale(1.15)
+      rotate(6deg);
+
+    opacity:1;
+  }
+
+  100%{
+    transform:
+      scale(1)
+      rotate(0deg);
+  }
+
+}
+
+
+.success-card h2{
+
+  font-family:
+    'Fraunces',
+    serif;
+
+  font-size:24px;
+
+  font-weight:500;
+
+  margin:
+    0 0 12px;
+}
+
+
+.success-card p{
+
+  font-size:14px;
+
+  color:var(--text-muted);
+
+  line-height:1.6;
+
+  margin:
+    0 0 30px;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:480px){
+
+  .card{
+
+    padding:
+      30px 22px;
+
+    border-radius:18px;
+  }
+
+
+  h1.title{
+
+    font-size:26px;
+  }
+
+
+  .form-header h2{
+
+    font-size:22px;
+  }
+
+}
+
+
+@media(min-width:900px){
+
+  .card{
+
+    padding:
+      48px 44px;
+  }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     AURORA
+========================= -->
+
+<div class="aurora">
+
+  <span class="blob-1"></span>
+
+  <span class="blob-2"></span>
+
+  <span class="blob-3"></span>
+
+</div>
+
+
+<div
+  class="light-streaks"
+  aria-hidden="true"
+>
+
+  <span style="--streak-duration:13s;--streak-delay:-3s"></span>
+
+  <span style="--streak-duration:17s;--streak-delay:-11s"></span>
+
+  <span style="--streak-duration:15s;--streak-delay:-7s"></span>
+
+  <span style="--streak-duration:19s;--streak-delay:-15s"></span>
+
+</div>
+
+
+<!-- =========================
+     PARTICLES
+========================= -->
+
+<div
+  class="particles"
+  id="particles">
+</div>
+
+
+<div class="facebook-cluster">
+
+  <a
+    class="facebook-float"
+    href="https://www.facebook.com/CFSYbeta/"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Mở trang Facebook Yên Sở Confession"
+    title="Facebook Yên Sở Confession"
+  >
+
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path d="M14 8h3V4h-3c-3.31 0-5 1.69-5 5v3H6v4h3v8h4v-8h3.2l.8-4H13V9c0-.67.33-1 1-1Z"/>
+    </svg>
+
+  </a>
+
+  <span class="facebook-label">
+    YEN SO CONFESSION
+  </span>
+
+</div>
+
+
+<!-- =========================
+     APP
+========================= -->
+
+<div class="app">
+
+
+  <!-- =========================
+       WELCOME SCREEN
+  ========================= -->
+
+  <section
+    id="welcomeScreen"
+    class="screen active"
+  >
+
+    <div class="card welcome-card">
+
+      <span class="eyebrow">
+
+        <span class="sparkle">
+          ✨
+        </span>
+
+        YENSOCONFESSION
+
+        <span class="sparkle">
+          ✨
+        </span>
+
+      </span>
+
+
+      <h1 class="title">
+
+        Chào mừng bạn đến với<br>
+        Yên Sở Confession
+
+      </h1>
+
+
+      <p class="subtitle">
+
+        Hãy chia sẻ câu chuyện,
+        suy nghĩ hoặc lời muốn nói
+        của bạn ngay nào!!
+
+      </p>
+
+
+      <button
+        class="btn btn-primary"
+        id="goToFormBtn"
+      >
+
+        Gửi Confession
+
+      </button>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =========================
+       FORM SCREEN
+  ========================= -->
+
+  <section
+    id="formScreen"
+    class="screen"
+  >
+
+    <div
+      class="card card-glow-host"
+      id="formCard"
+    >
+
+
+      <!-- Cursor glow -->
+
+      <div class="cursor-glow"></div>
+
+
+      <div class="card-content">
+
+
+        <div class="form-header">
+
+          <h2>
+            Viết "tâm tư" của bạn ở đây
+          </h2>
+
+          <p class="hint">
+
+            Confession của bạn sẽ được
+            gửi dưới dạng ẩn danh.
+
+          </p>
+
+        </div>
+
+
+
+        <!-- =========================
+             CONFESSION TEXT
+        ========================= -->
+
+        <textarea
+          id="confessionText"
+          aria-describedby="charCounter textError"
+          aria-invalid="false"
+          placeholder="Viết confession ở đây bạn nhé!!"
+          maxlength="2000"
+        ></textarea>
+
+        <label
+          class="sr-only"
+          for="confessionText"
+        >
+          Nội dung confession
+        </label>
+
+
+        <div
+          class="char-counter"
+          id="charCounter"
+          aria-live="polite"
+        >
+          0 / 2000
+        </div>
+
+
+        <div
+          class="field-error"
+          id="textError"
+          role="alert"
+        ></div>
+
+
+        <!-- =========================
+             SUBMIT
+        ========================= -->
+
+        <div class="submit-block">
+
+          <button
+            class="btn btn-primary"
+            id="submitBtn"
+          >
+
+            <span class="spinner"></span>
+
+            <span
+              class="btn-label"
+              aria-live="polite"
+            >
+              Gửi Confession
+            </span>
+
+          </button>
+
+
+          <div
+            class="status-line"
+            id="statusLine"
+            role="status"
+            aria-live="polite"
+          ></div>
+
+        </div>
+
+
+
+        <p class="privacy-note">
+
+          🔒 Không cần cung cấp thông tin cá nhân.
+          Confession được gửi dưới dạng ẩn danh.
+
+        </p>
+
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- =========================
+       SUCCESS SCREEN
+  ========================= -->
+
+  <section
+    id="successScreen"
+    class="screen"
+  >
+
+    <div class="card success-card">
+
+
+      <div class="success-icon">
+        🎉
+      </div>
+
+
+      <h2>
+        Gửi Confession thành công!
+      </h2>
+
+
+      <p>
+
+        Cảm ơn bạn đã chia sẻ.
+        Confession của bạn đã được
+        gửi ẩn danh.
+
+      </p>
+
+
+      <button
+        class="btn btn-primary"
+        id="sendAnotherBtn"
+      >
+
+        Gửi Confession khác
+
+      </button>
+
+
+    </div>
+
+  </section>
+
+
+</div>
+
+
+
+<script>
+
+/* ==========================================================
+   YÊN SỞ CONFESSION
+   CHỈ GỬI TEXT - KHÔNG CÓ ẢNH
+========================================================== */
+
+
+// ==========================================================
+// CONSTANTS
+// ==========================================================
+
+const MAX_CHARS = 2000;
+
+
+function getClientId(){
+
+  const storageKey =
+    'yen-so-confession-client-id';
+
+
+  try{
+
+    const savedId =
+      localStorage.getItem(storageKey);
+
+
+    if(
+      savedId &&
+      /^[a-zA-Z0-9_-]{16,80}$/.test(savedId)
+    ){
+
+      return savedId;
+
+    }
+
+
+    const newId =
+      crypto.randomUUID
+        ? crypto.randomUUID().replace(/-/g, '')
+        : Date.now().toString(36) + Math.random().toString(36).slice(2);
+
+    localStorage.setItem(
+      storageKey,
+      newId
+    );
+
+    return newId;
+
+  }catch(error){
+
+    return 'temporary-' +
+      Date.now().toString(36) +
+      Math.random().toString(36).slice(2);
+
+  }
+
+}
+
+
+const CLIENT_ID =
+  getClientId();
+
+
+// ==========================================================
+// PARTICLES
+// ==========================================================
+
+(function createParticles(){
+
+  const container =
+    document.getElementById(
+      'particles'
+    );
+
+  const COUNT = 26;
+
+
+  for(let i = 0; i < COUNT; i++){
+
+    const p =
+      document.createElement(
+        'div'
+      );
+
+    p.className =
+      'particle';
+
+
+    const size =
+      (
+        Math.random() * 2 + 1.5
+      ).toFixed(1);
+
+
+    const left =
+      (
+        Math.random() * 100
+      ).toFixed(2);
+
+
+    const top =
+      (
+        Math.random() * 100
+      ).toFixed(2);
+
+
+    const dur =
+      (
+        Math.random() * 3 + 2.5
+      ).toFixed(2);
+
+
+    const delay =
+      (
+        -Math.random() * 5
+      ).toFixed(2);
+
+
+    p.style.width =
+      size + 'px';
+
+    p.style.height =
+      size + 'px';
+
+    p.style.left =
+      left + '%';
+
+    p.style.top =
+      top + '%';
+
+
+    p.style.setProperty(
+      '--dur',
+      dur + 's'
+    );
+
+
+    p.style.setProperty(
+      '--delay',
+      delay + 's'
+    );
+
+
+    container.appendChild(p);
+
+  }
+
+})();
+
+
+// ==========================================================
+// CURSOR GLOW
+// ==========================================================
+
+(function initCursorGlow(){
+
+  const prefersReducedMotion =
+    window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+
+
+  if(prefersReducedMotion){
+    return;
+  }
+
+
+  const glowHost =
+    document.getElementById(
+      'formCard'
+    );
+
+
+  if(!glowHost){
+    return;
+  }
+
+
+  const glow =
+    glowHost.querySelector(
+      '.cursor-glow'
+    );
+
+
+  let rect =
+    glowHost.getBoundingClientRect();
+
+
+  let targetX =
+    rect.width / 2;
+
+
+  let targetY =
+    rect.height / 2;
+
+
+  let curX =
+    targetX;
+
+
+  let curY =
+    targetY;
+
+
+  let started = false;
+
+
+  function refreshRect(){
+
+    rect =
+      glowHost.getBoundingClientRect();
+
+  }
+
+
+  window.addEventListener(
+    'resize',
+    refreshRect
+  );
+
+
+  window.addEventListener(
+    'scroll',
+    refreshRect,
+    { passive:true }
+  );
+
+
+  window.addEventListener(
+    'mousemove',
+    (e) => {
+
+      const localX =
+        e.clientX - rect.left;
+
+
+      const localY =
+        e.clientY - rect.top;
+
+
+      targetX =
+        Math.min(
+          Math.max(localX, 0),
+          rect.width
+        );
+
+
+      targetY =
+        Math.min(
+          Math.max(localY, 0),
+          rect.height
+        );
+
+
+      if(!started){
+
+        started = true;
+
+        curX =
+          targetX;
+
+        curY =
+          targetY;
+
+
+        glow.classList.add(
+          'active'
+        );
+
+
+        requestAnimationFrame(
+          animateGlow
+        );
+
+      }
+
+    }
+  );
+
+
+  function animateGlow(){
+
+    curX +=
+      (targetX - curX) * 0.15;
+
+
+    curY +=
+      (targetY - curY) * 0.15;
+
+
+    glowHost.style.setProperty(
+      '--x',
+      curX + 'px'
+    );
+
+
+    glowHost.style.setProperty(
+      '--y',
+      curY + 'px'
+    );
+
+
+    requestAnimationFrame(
+      animateGlow
+    );
+
+  }
+
+})();
+
+
+// ==========================================================
+// SCREEN ELEMENTS
+// ==========================================================
+
+const welcomeScreen =
+  document.getElementById(
+    'welcomeScreen'
+  );
+
+
+const formScreen =
+  document.getElementById(
+    'formScreen'
+  );
+
+
+const successScreen =
+  document.getElementById(
+    'successScreen'
+  );
+
+
+// ==========================================================
+// FORM ELEMENTS
+// ==========================================================
+
+const goToFormBtn =
+  document.getElementById(
+    'goToFormBtn'
+  );
+
+
+const confessionText =
+  document.getElementById(
+    'confessionText'
+  );
+
+
+const charCounter =
+  document.getElementById(
+    'charCounter'
+  );
+
+
+const textError =
+  document.getElementById(
+    'textError'
+  );
+
+
+const submitBtn =
+  document.getElementById(
+    'submitBtn'
+  );
+
+
+const statusLine =
+  document.getElementById(
+    'statusLine'
+  );
+
+
+const sendAnotherBtn =
+  document.getElementById(
+    'sendAnotherBtn'
+  );
+
+
+// ==========================================================
+// SHOW SCREEN
+// ==========================================================
+
+function showScreen(screenEl){
+
+  [
+    welcomeScreen,
+    formScreen,
+    successScreen
+  ]
+  .forEach(
+    s => s.classList.remove(
+      'active'
+    )
+  );
+
+
+  screenEl.classList.add(
+    'active'
+  );
+
+
+  const firstControl =
+    screenEl.querySelector(
+      'textarea, button'
+    );
+
+
+  if(firstControl){
+
+    firstControl.focus();
+
+  }
+
+}
+
+
+// ==========================================================
+// GO TO FORM
+// ==========================================================
+
+goToFormBtn.addEventListener(
+  'click',
+  () => {
+
+    showScreen(
+      formScreen
+    );
+
+  }
+);
+
+
+// ==========================================================
+// CHARACTER COUNTER
+// ==========================================================
+
+confessionText.addEventListener(
+  'input',
+  () => {
+
+    const len =
+      confessionText.value.length;
+
+
+    charCounter.textContent =
+      `${len} / ${MAX_CHARS}`;
+
+
+    charCounter.classList.toggle(
+      'limit-near',
+      len > MAX_CHARS * 0.9
+    );
+
+
+    clearFieldError(
+      textError,
+      confessionText
+    );
+
+  }
+);
+
+
+// ==========================================================
+// ERROR FUNCTIONS
+// ==========================================================
+
+function showFieldError(
+  el,
+  message,
+  inputEl
+){
+
+  el.textContent =
+    message;
+
+
+  el.classList.add(
+    'active'
+  );
+
+
+  if(inputEl){
+
+    inputEl.classList.add(
+      'input-error'
+    );
+
+    inputEl.setAttribute(
+      'aria-invalid',
+      'true'
+    );
+
+  }
+
+}
+
+
+function clearFieldError(
+  el,
+  inputEl
+){
+
+  el.textContent =
+    '';
+
+
+  el.classList.remove(
+    'active'
+  );
+
+
+  if(inputEl){
+
+    inputEl.classList.remove(
+      'input-error'
+    );
+
+    inputEl.setAttribute(
+      'aria-invalid',
+      'false'
+    );
+
+  }
+
+}
+
+
+// ==========================================================
+// SUBMIT
+// ==========================================================
+
+submitBtn.addEventListener(
+  'click',
+  async () => {
+
+    if(submitBtn.disabled){
+
+      return;
+
+    }
+
+    clearFieldError(
+      textError,
+      confessionText
+    );
+
+
+    statusLine.classList.remove(
+      'active'
+    );
+
+
+    const content =
+      confessionText.value;
+
+
+    const trimmed =
+      content.trim();
+
+
+    // Không được để trống
+
+    if(trimmed.length === 0){
+
+      showFieldError(
+        textError,
+        'Bạn chưa viết nội dung confession.',
+        confessionText
+      );
+
+      return;
+
+    }
+
+
+    // Không quá 2000 ký tự
+
+    if(content.length > MAX_CHARS){
+
+      showFieldError(
+        textError,
+        `Nội dung vượt quá giới hạn ${MAX_CHARS} ký tự.`,
+        confessionText
+      );
+
+      return;
+
+    }
+
+
+    // Bắt đầu gửi
+
+    setSubmitting(true);
+
+
+    try{
+
+      await submitConfession(
+        trimmed
+      );
+
+
+      // Thành công
+
+      showScreen(
+        successScreen
+      );
+
+
+      resetForm();
+
+
+    }catch(error){
+
+      console.error(error);
+
+
+      statusLine.textContent =
+        error.message ||
+        'Có lỗi xảy ra, vui lòng thử lại.';
+
+
+      statusLine.classList.add(
+        'active'
+      );
+
+
+    }finally{
+
+      setSubmitting(false);
+
+    }
+
+  }
+);
+
+
+// ==========================================================
+// SUBMITTING
+// ==========================================================
+
+function setSubmitting(
+  isSubmitting
+){
+
+  submitBtn.disabled =
+    isSubmitting;
+
+
+  submitBtn.classList.toggle(
+    'loading',
+    isSubmitting
+  );
+
+
+  submitBtn
+    .querySelector(
+      '.btn-label'
+    )
+    .textContent =
+      isSubmitting
+        ? 'Đang gửi...'
+        : 'Gửi Confession';
+
+}
+
+
+// ==========================================================
+// GOOGLE APPS SCRIPT
+// ==========================================================
+
+const GOOGLE_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbyzlei-Z2EcYAf-fiXMkUsJ7J7mMIlfg6CRrNcALEe6ZqaeMEZcxQpFP6wW1K5UQX2Trw/exec";
+
+
+async function submitConfession(
+  content
+){
+
+  const response =
+    await fetch(
+      GOOGLE_SCRIPT_URL,
+      {
+
+        method:"POST",
+
+        headers:{
+          "Content-Type":
+            "text/plain;charset=utf-8"
+        },
+
+        body:JSON.stringify({
+
+          content:content,
+
+          clientId:CLIENT_ID,
+
+          website:''
+
+        })
+
+      }
+    );
+
+
+  if(!response.ok){
+
+    throw new Error(
+      "Không thể kết nối đến máy chủ."
+    );
+
+  }
+
+
+  const responseText =
+    await response.text();
+
+
+  let result;
+
+
+  try{
+
+    result =
+      JSON.parse(responseText);
+
+  }catch(error){
+
+    throw new Error(
+      "Máy chủ trả về dữ liệu không hợp lệ."
+    );
+
+  }
+
+
+  if(!result.success){
+
+    throw new Error(
+      result.error ||
+      "Gửi confession thất bại."
+    );
+
+  }
+
+
+  return result;
+
+}
+
+
+// ==========================================================
+// RESET FORM
+// ==========================================================
+
+function resetForm(){
+
+  confessionText.value =
+    '';
+
+  charCounter.textContent =
+    `0 / ${MAX_CHARS}`;
+
+
+  charCounter.classList.remove(
+    'limit-near'
+  );
+
+
+  clearFieldError(
+    textError,
+    confessionText
+  );
+
+
+  statusLine.classList.remove(
+    'active'
+  );
+
+
+  statusLine.textContent =
+    '';
+
+}
+
+
+// ==========================================================
+// SEND ANOTHER
+// ==========================================================
+
+sendAnotherBtn.addEventListener(
+  'click',
+  () => {
+
+    showScreen(
+      formScreen
+    );
+
+  }
+);
+
+
+document.addEventListener(
+  'contextmenu',
+  (event) => {
+
+    event.preventDefault();
+
+  }
+);
+
+
+document.addEventListener(
+  'keydown',
+  (event) => {
+
+    const key =
+      event.key.toLowerCase();
+
+    const devToolsShortcut =
+      event.key === 'F12' ||
+      (
+        (event.ctrlKey || event.metaKey) &&
+        event.shiftKey &&
+        ['i', 'j', 'c'].includes(key)
+      ) ||
+      (
+        (event.ctrlKey || event.metaKey) &&
+        key === 'u'
+      );
+
+
+    if(devToolsShortcut){
+
+      event.preventDefault();
+
+    }
+
+  }
+);
+
+</script>
+
+</body>
+</html>
